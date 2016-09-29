@@ -1,22 +1,25 @@
 {
-  "name": "node-training",
+  "name": "binstaface",
   "version": "0.1.0",
   "author": "Bitovi <info@bitovi.com>",
-  "description": "Server side JavaScript FTW!",
-  "engines" : { "node" : "0.10.0" },
+  "description": "A picture sharing application!",
+  "engines": {
+    "node": "^6.0.0"
+  },
   "scripts": {
-    "test": "npm run mocha",
-    "start": "node lib/main.js",
-    "mocha": "mocha test.js"
+    "test": "npm run eslint && npm run mocha",
+    "start": "bin/start",
+    "mocha": "mocha test/*.js",
+    "eslint": "eslint **/*.js"
   },
   "main": "./lib/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitovi/node-training"
+    "url": "https://github.com/daffl/binstaface"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "eslint": "^3.6.1",
     "mocha": "^3.1.0"
   },
   "license": "MIT"
