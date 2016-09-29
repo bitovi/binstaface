@@ -5,40 +5,95 @@ const binstaface = require('../lib');
 
 describe('my app test', function() {
   const PORT = 4455;
+  
   let server;
+
+  // Create a request instance with defaults
+  const req = request.defaults({
+    baseUrl: `http://localhost:${PORT}/messages`,
+    json: true
+  });
 
   before(function(done) {
     server = binstaface(path.join(__dirname, '..'))
-      .listen(PORT, () => done());
+      .listen(PORT, () => {
+        req({
+          url: '/',
+          method: 'post',
+          body: { text: 'A test message' }
+        }, error => done(error));
+      });
   });
 
   after(function(done) {
     server.close(() => done());
   });
 
-  it('sends 404 for non-existing files', function(done) {
-    request(`http://localhost:${PORT}/dummy.txt`, (error, res, body) => {
-      if(error) {
-        return done(error);
-      }
-
-      assert.equal(res.statusCode, 404);
-      assert.equal(body, 'File not found\n');
-      done();
+  describe('messages service', function() {
+    it('GET / lists all messages', function(done) {
+      req('/', (error, res, body) => {
+        assert.deepEqual(body, [{
+          id: 1,
+          text: 'A test message'
+        }]);
+        done(error);
+      });
     });
-  });
 
-  it('sends package.json', function(done) {
-    request({
-      url: `http://localhost:${PORT}/package.json`,
-      json: true
-    }, (error, res, body) => {
-      if(error) {
-        return done(error);
-      }
+    it('GET /:id returns a single message', function(done) {
+      req('/1', (error, res, body) => {
+        assert.deepEqual(body, {
+          id: 1,
+          text: 'A test message'
+        });
+        done(error);
+      });
+    });
 
-      assert(body.description, 'A picture sharing application!');
-      done();
+    it('POST / creates a new message', function(done) {
+      const text = 'Created message';
+
+      req({
+        url: '/',
+        method: 'post',
+        body: { text }
+      }, (error, res, body) => {
+        assert.deepEqual(body, { id: 2, text });
+        done(error);
+      });
+    });
+
+    it('PATCH /:id extends a message', function(done) {
+      req({
+        url: '/1',
+        method: 'patch',
+        body: { tested: true }
+      }, (error, res, body) => {
+        assert.deepEqual(body, {
+          id: 1,
+          text: 'A test message',
+          tested: true
+        });
+        done(error);
+      });
+    });
+
+    it('DELETE /:id removes a message', function(done) {
+      req({
+        url: '/1',
+        method: 'delete'
+      }, (error, res, body) => {
+        if(error) {
+          return done(error);
+        }
+        
+        assert.equal(body.id, 1);
+
+        req('/', (error, res, body) => {
+          assert.equal(body.length, 1, 'Only one message left');
+          done(error);
+        });
+      });
     });
   });
 });
