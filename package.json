@@ -7,14 +7,14 @@
   "keywords": [
     "feathers"
   ],
+  "engines": {
+    "node": "^ 6.0.0"
+  },
   "license": "MIT",
   "repository": {},
   "author": {},
   "contributors": [],
   "bugs": {},
-  "engines": {
-    "node": ">= 0.12.0"
-  },
   "scripts": {
     "push": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm run push",
