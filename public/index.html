@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feathers demo</title>
+</head>
+<body>
+  <script type="text/javascript" src="socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="//unpkg.com/feathers-client@^1.0.0/dist/feathers.js"></script>
+  <script type="text/javascript">
+    const socket = io();
+    const app = feathers()
+      .configure(feathers.socketio(socket));
+
+    const messages = app.service('messages');
+
+    messages.on('created', message => console.log('Someone created a message', message));
+
+    messages.create({
+      text: 'This is a message'
+    });
+  </script>
+
+</body>
+</html>

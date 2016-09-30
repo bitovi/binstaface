@@ -1,12 +1,11 @@
 const assert = require('assert');
-const path = require('path');
 const request = require('request');
 const binstaface = require('../lib');
 
 describe('my app test', function() {
   const PORT = 4455;
   
-  let server;
+  let server, app;
 
   // Create a request instance with defaults
   const req = request.defaults({
@@ -15,7 +14,8 @@ describe('my app test', function() {
   });
 
   before(function(done) {
-    server = binstaface(path.join(__dirname, '..'))
+    app = binstaface();
+    server = app
       .listen(PORT, () => {
         req({
           url: '/',
@@ -93,6 +93,16 @@ describe('my app test', function() {
           assert.equal(body.length, 1, 'Only one message left');
           done(error);
         });
+      });
+    });
+  });
+
+  describe('todos service', function() {
+    it('get works', function() {
+      return app.service('todos').get('laundry').then(todo => {
+        assert.equal(todo.id, 'laundry');
+        assert.equal(todo.text, 'You have to do laundry');
+        assert.ok(todo.modified);
       });
     });
   });
