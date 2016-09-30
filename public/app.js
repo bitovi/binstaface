@@ -26,15 +26,23 @@ $(function() {
     tag: 'chat-compose-message',
     template: `
       <form ($submit)="send" class="flex flex-row flex-space-between">
+        <video id="video" class="flex flex-1"></video>
         <input type="text" name="text" {($value)}="message" class="flex flex-1">
         <button class="button-primary" type="submit">Send</button>
       </form>
     `,
     viewModel: {
       send(ev) {
-        messageService.create({
-          text: this.attr('message')
-        }).then(() => this.attr('message', ''));
+        const success = image =>
+            messageService.create({
+              image, text: this.attr('message')
+            }).then(() => this.attr('message', ''));
+
+        $('#video').snapshot({
+          width: 64,
+          height: 64,
+          success
+        });
 
         return false;
       }
@@ -80,7 +88,7 @@ $(function() {
     template: `
       {{#each messages}}
       <div class="message flex flex-row">
-        <img src="{{avatar sentBy.avatar}}" alt="{{sentBy.email}}" class="avatar">
+        <img src="{{image}}" alt="{{sentBy.email}}" class="avatar">
         <div class="message-wrapper">
           <p class="message-header">
             <span class="username font-600">{{username sentBy.email}}</span>
@@ -97,7 +105,6 @@ $(function() {
       },
 
       username(email) {
-        console.log('!', email(), email() || 'Anonymous')
         return email() || 'Anonymous';
       },
 
@@ -164,6 +171,8 @@ $(function() {
 
     // We will also see when new users get created in real-time
     userService.on('created', user => state.attr('users').push(user));
+
+    $('#video').video();
   }).catch(error => {
     if(error.code === 401) {
       window.location.href = '/login.html'

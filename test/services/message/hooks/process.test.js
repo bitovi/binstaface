@@ -23,9 +23,9 @@ describe('message process hook', () => {
         text: 'foo&'
       }
     };
-    
+
     process()(mockHook);
-    
+
     assert.deepEqual(mockHook.data, {
       text: 'foo&amp;',
       userId: '1',

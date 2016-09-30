@@ -15,10 +15,11 @@ module.exports = function(options) {
       .substring(0, 400)
       // Do some basic HTML escaping
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const { image } = hook.data;
 
     // Override the original data
     hook.data = {
-      text,
+      text, image,
       // Set the user id
       sentBy: user._id,
       // Add the current time via `getTime`
