@@ -20,7 +20,7 @@ describe('my app test', function() {
         req({
           url: '/',
           method: 'post',
-          body: { text: 'A test message' }
+          body: { id: 1, text: 'A test message' }
         }, error => done(error));
       });
   });
@@ -56,7 +56,7 @@ describe('my app test', function() {
       req({
         url: '/',
         method: 'post',
-        body: { text }
+        body: { id: 2, text }
       }, (error, res, body) => {
         assert.deepEqual(body, { id: 2, text });
         done(error);
