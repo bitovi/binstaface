@@ -1,4 +1,0 @@
-#!/usr/bin/env node
-const binstaface = require('../lib');
-
-console.log(binstaface.message);

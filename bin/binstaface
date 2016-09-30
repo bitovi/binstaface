@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+const binstaface = require('../lib');
+
+binstaface().listen(3030, function() {
+  console.log(`Server listening on port ${3030}`);
+});
